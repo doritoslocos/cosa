@@ -1,0 +1,78 @@
+<div id="chatbox">
+  <div id="messages"></div>
+  <form id="chat-form">
+    <input type="text" id="message-input" placeholder="Enter your message...">
+    <button type="submit" id="send-btn">Send</button>
+  </form>
+</div>
+
+<style>
+#chatbox {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 400px;
+  background-image: url("https://i.ibb.co/tBJ1YdK/New-Canvas.jpg");
+  background-size: cover;
+  color: white;
+  font-family: sans-serif;
+}
+
+#messages {
+  overflow-y: scroll;
+  height: 80%;
+}
+
+#chat-form {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+#message-input {
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+}
+
+#send-btn {
+  margin-left: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+</style>
+
+<script>
+fetch('https://api.twitch.tv/helix/users', {
+  headers: {
+    'Client-ID': 'yn7kbcght2dqsai0a19rbnuqzk7xnk',
+    'Authorization': 'Bhttps://localhost'
+  }
+})
+  .then(response => response.json())
+  .then(data => {
+    const username = data.data[0].login;
+    const messagesEl = document.getElementById('messages');
+    const messageInputEl = document.getElementById('message-input');
+    const chatFormEl = document.getElementById('chat-form');
+
+    chatFormEl.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const message = messageInputEl.value.trim();
+      if (message) {
+        const messageEl = document.createElement('div');
+        messageEl.classList.add('message');
+        messageEl.innerHTML = `<span class="username">${username}</span>: ${message}`;
+        messagesEl.appendChild(messageEl);
+        messageInputEl.value = '';
+      }
+    });
+  })
+  .catch(error => console.error(error));
+</script>
